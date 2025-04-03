@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/51644/Desktop/test/build",
+  "command": "D:\\newMinGw\\mingw64\\bin\\g++.exe -D_WIN32_WINNT=0x0A00 @CMakeFiles/server.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\server.dir\\server.cpp.obj -c C:\\Users\\51644\\Desktop\\test\\server.cpp",
+  "file": "C:/Users/51644/Desktop/test/server.cpp"
+}
+]
