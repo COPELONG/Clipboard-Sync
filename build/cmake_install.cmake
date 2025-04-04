@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/51644/Desktop/test
+# Install script for directory: D:/Clipboard-Sync/Clipboard-Sync
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/51644/Desktop/test/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Clipboard-Sync/Clipboard-Sync/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

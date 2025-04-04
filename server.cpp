@@ -138,7 +138,12 @@ void handleClient(websocket::stream<tcp::socket> ws) {
                 ws_ptr->write(net::buffer(clipboardText));
                 std::cout << "DEBUG 发送内容: [" << clipboardText << "]"
                           << std::endl; // 检查是否有\n
-                std::cout << "[SUCCESS] 已发送剪贴板内容" << std::endl;
+                std::cout << "[SUCCESS] 已成功发送剪贴板内容到客户端"
+                          << std::endl;
+                MessageBeep(MB_OK); // 默认"叮"
+                Sleep(5);
+                MessageBeep(MB_ICONERROR); // 默认"咚"
+
                 copyCount = 0;
               } catch (...) {
                 *stopFlag = true; // 发送失败时停止
@@ -162,6 +167,8 @@ void handleClient(websocket::stream<tcp::socket> ws) {
         ws_ptr->read(buffer);
         std::string receivedText = beast::buffers_to_string(buffer.data());
         setClipboardText(receivedText);
+        std::cout << "[SUCCESS] 剪贴板以收到客户端数据" << std::endl;
+        MessageBeep(48);
         buffer.consume(buffer.size());
       } catch (const beast::system_error &e) {
         if (e.code() == websocket::error::closed) {

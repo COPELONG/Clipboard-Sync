@@ -51,6 +51,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background 0.3s;
         }
 
         button:hover {
@@ -70,19 +71,35 @@
         }
 
         .messages-title {
-            margin: 0 0 10px 0;
+            margin: 0;
             font-size: 16px;
             color: #666;
         }
 
         .messages-content {
-            white-space: pre-wrap; /* 新增此行 */
+            white-space: pre-wrap;
             word-break: break-word;
             height: 200px;
             overflow-y: auto;
             background: #f8f9fa;
             padding: 8px;
             border-radius: 4px;
+        }
+
+        /* 新增复制按钮样式 */
+        .copy-button {
+            background: #28a745;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .copy-button:hover {
+            background: #218838;
+        }
+        .messages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -105,11 +122,16 @@
                 <div id="messages" class="messages-content"></div>
             </div>
             
-            <div class="messages-panel">
-                <h3 class="messages-title">服务器响应</h3>
-                <div id="serverMessages" class="messages-content"></div>
+    <!-- 保持原有容器结构 -->
+    <div class="messages-panel">
+        <div class="messages-header">
+            <h3 class="messages-title">服务器响应</h3>
+            <div class="button-group">
+                <button onclick="copyServerMessages()" class="copy-button">复制内容</button>
+                <button onclick="clearServerMessages()" class="clear-button">清空记录</button>
             </div>
         </div>
+        <div id="serverMessages" class="messages-content"></div>
     </div>
 
     <script>
@@ -169,11 +191,39 @@
             }
         }
 
+        // 新增复制功能
+        function copyServerMessages() {
+            const content = Array.from(serverMessagesElement.children)
+                .map(p => p.textContent.replace(/^\[\d{1,2}:\d{2}:\d{2}\]\s*/, ''))
+                .join('\n');
+
+            navigator.clipboard.writeText(content)
+                .then(() => {
+                    showTempMessage('复制成功', '#28a745');
+                })
+                .catch(err => {
+                    showTempMessage(`复制失败: ${err}`, '#dc3545');
+                });
+        }
+
+        function showTempMessage(text, color) {
+            const p = document.createElement('p');
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+            p.style.color = color;
+            serverMessagesElement.appendChild(p);
+            setTimeout(() => p.remove(), 1500);
+            serverMessagesElement.scrollTop = serverMessagesElement.scrollHeight;
+        }
+        // 新增清空功能
+        function clearServerMessages() {
+            if (confirm('确定要清空所有服务器响应记录吗？')) {
+                serverMessagesElement.innerHTML = '';
+                showTempMessage('记录已清空', '#17a2b8');
+            }
+        }
+
         // 初始化连接
         connect();
-
-        // 回车发送消息功能
-
     </script>
 </body>
 </html>

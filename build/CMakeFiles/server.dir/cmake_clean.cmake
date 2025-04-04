@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
-  "C:/Users/51644/Desktop/test/bin/libserver.dll.a"
-  "C:/Users/51644/Desktop/test/bin/server.exe"
-  "C:/Users/51644/Desktop/test/bin/server.exe.manifest"
-  "C:/Users/51644/Desktop/test/bin/server.pdb"
   "CMakeFiles/server.dir/server.cpp.obj"
   "CMakeFiles/server.dir/server.cpp.obj.d"
+  "D:/Clipboard-Sync/Clipboard-Sync/bin/libserver.dll.a"
+  "D:/Clipboard-Sync/Clipboard-Sync/bin/server.exe"
+  "D:/Clipboard-Sync/Clipboard-Sync/bin/server.exe.manifest"
+  "D:/Clipboard-Sync/Clipboard-Sync/bin/server.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

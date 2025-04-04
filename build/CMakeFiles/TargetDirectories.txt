@@ -1,3 +1,3 @@
-C:/Users/51644/Desktop/test/build/CMakeFiles/server.dir
-C:/Users/51644/Desktop/test/build/CMakeFiles/edit_cache.dir
-C:/Users/51644/Desktop/test/build/CMakeFiles/rebuild_cache.dir
+D:/Clipboard-Sync/Clipboard-Sync/build/CMakeFiles/server.dir
+D:/Clipboard-Sync/Clipboard-Sync/build/CMakeFiles/edit_cache.dir
+D:/Clipboard-Sync/Clipboard-Sync/build/CMakeFiles/rebuild_cache.dir
