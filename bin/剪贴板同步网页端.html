@@ -114,11 +114,13 @@
         <div>
             <textarea id="messageInput" placeholder="输入要同步到剪贴板的内容"></textarea>
             <button onclick="sendMessage()">发送</button>
+            <button onclick="clearInputMessages()" class="clear-button">清空输入</button>
         </div>
 
         <div class="messages-container">
             <div class="messages-panel">
                 <h3 class="messages-title">已发送消息</h3>
+                <button onclick="clearSendMessages()" class="clear-button">清空发送</button>
                 <div id="messages" class="messages-content"></div>
             </div>
             
@@ -142,7 +144,7 @@
         const serverMessagesElement = document.getElementById('serverMessages');
 
         function connect() {
-            ws = new WebSocket('ws://192.168.57.100:8080');
+            ws = new WebSocket('ws://192.168.253.100:8080');
 
             ws.onopen = function() {
                 updateStatus('connected', '已连接到服务器');
@@ -191,29 +193,55 @@
             }
         }
 
-        // 新增复制功能
-        function copyServerMessages() {
-            const content = Array.from(serverMessagesElement.children)
-                .map(p => p.textContent.replace(/^\[\d{1,2}:\d{2}:\d{2}\]\s*/, ''))
-                .join('\n');
+    function copyServerMessages() {
+        const content = Array.from(serverMessagesElement.children)
+            .map(p => p.textContent.replace(/^\[\d{1,2}:\d{2}:\d{2}\]\s*/, ''))
+            .join('\n');
 
+        if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(content)
                 .then(() => {
                     showTempMessage('复制成功', '#28a745');
                 })
-                .catch(err => {
-                    showTempMessage(`复制失败: ${err}`, '#dc3545');
+                .catch(() => {
+                    fallbackCopyText(content);
                 });
+        } else {
+            fallbackCopyText(content);
+        }
+    }
+
+    function fallbackCopyText(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';  // 避免页面跳动
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        try {
+            const success = document.execCommand('copy');
+            if (success) {
+                showTempMessage('复制成功（兼容模式）', '#28a745');
+            } else {
+                showTempMessage('复制失败，请手动选择文本复制', '#dc3545');
+            }
+        } catch (err) {
+            showTempMessage('复制失败，请手动选择文本复制', '#dc3545');
         }
 
-        function showTempMessage(text, color) {
-            const p = document.createElement('p');
-            p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
-            p.style.color = color;
-            serverMessagesElement.appendChild(p);
-            setTimeout(() => p.remove(), 1500);
-            serverMessagesElement.scrollTop = serverMessagesElement.scrollHeight;
-        }
+        document.body.removeChild(textarea);
+    }
+
+    function showTempMessage(text, color) {
+        const p = document.createElement('p');
+        p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+        p.style.color = color;
+        serverMessagesElement.appendChild(p);
+        setTimeout(() => p.remove(), 1500);
+        serverMessagesElement.scrollTop = serverMessagesElement.scrollHeight;
+    }
         // 新增清空功能
         function clearServerMessages() {
             if (confirm('确定要清空所有服务器响应记录吗？')) {
@@ -221,6 +249,31 @@
                 showTempMessage('记录已清空', '#17a2b8');
             }
         }
+// 修复清空输入功能
+function clearInputMessages() {
+    if (confirm('确定要清空输入框内容吗？')) {
+        messageInput.value = ''; // 改用value属性
+        showLocalMessage('输入已清空', '#17a2b8', messagesElement); // 在发送区域显示提示
+    }
+}
+
+// 修复清空发送记录
+function clearSendMessages() {
+    if (confirm('确定要清空发送记录吗？')) {
+        messagesElement.innerHTML = '';
+        showLocalMessage('发送记录已清空', '#17a2b8', messagesElement); // 在对应区域显示
+    }
+}
+
+// 新增局部提示方法
+function showLocalMessage(text, color, container) {
+    const p = document.createElement('p');
+    p.textContent = `[${new Date().toLocaleTimeString()}] ${text}`;
+    p.style.color = color;
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 1500);
+    container.scrollTop = container.scrollHeight;
+}
 
         // 初始化连接
         connect();
